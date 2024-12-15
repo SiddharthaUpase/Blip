@@ -11,19 +11,168 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF8B5CF6), // Purple background
+      backgroundColor: const Color(0xFFF4F1DE), // Cream background
       appBar: AppBar(
-        centerTitle: true,
+        backgroundColor: const Color(0xFF3D405B), // Dark blue
+        elevation: 0,
         title: Text(
-          'Object Facts',
-          style: GoogleFonts.poppins(
+          'FACTS TELLER',
+          style: GoogleFonts.spaceGrotesk(
             fontSize: 24,
             fontWeight: FontWeight.bold,
             color: Colors.white,
+            shadows: const [
+              Shadow(
+                offset: Offset(2, 2),
+                color: Colors.black,
+                blurRadius: 0,
+              ),
+            ],
           ),
         ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: IconButton(
+              icon: const Icon(Icons.exit_to_app, color: Colors.white),
+              onPressed: () {
+                Get.dialog(
+                  Dialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF4F1DE),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(4, 4),
+                            color: Colors.black,
+                            blurRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF81B29A),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: const [
+                                BoxShadow(
+                                  offset: Offset(4, 4),
+                                  color: Colors.black,
+                                  blurRadius: 0,
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              'HEADING OUT? 👋',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Come back soon for more amazing facts!',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 16,
+                              color: const Color(0xFF3D405B),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () => Get.back(),
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE07A5F),
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          offset: Offset(2, 2),
+                                          color: Colors.black,
+                                          blurRadius: 0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      'STAY',
+                                      style: GoogleFonts.spaceGrotesk(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: InkWell(
+                                  onTap: () {
+                                    Get.back();
+                                    //clear all data
+                                    controller.resetStates();
+                                    Get.offAllNamed(
+                                        '/login'); // Or your logout logic
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 12,
+                                      horizontal: 16,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF3D405B),
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          offset: Offset(2, 2),
+                                          color: Colors.black,
+                                          blurRadius: 0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Text(
+                                      'LOGOUT',
+                                      style: GoogleFonts.spaceGrotesk(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
       body: Obx(() {
         if (controller.isAnalyzing.value) {
@@ -31,204 +180,240 @@ class HomeView extends GetView<HomeController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const CircularProgressIndicator(
-                  color: Color(0xFF4ADE80),
-                  strokeWidth: 6,
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE07A5F), // Coral
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        offset: Offset(4, 4),
+                        color: Colors.black,
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 6,
+                  ),
                 ),
                 const SizedBox(height: 24),
-                Obx(() => Text(
-                      controller.loadingMessage.value,
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w500,
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF81B29A), // Sage green
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        offset: Offset(4, 4),
+                        color: Colors.black,
+                        blurRadius: 0,
                       ),
-                      textAlign: TextAlign.center,
-                    )),
+                    ],
+                  ),
+                  child: Text(
+                    controller.loadingMessage.value,
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ],
             ),
           );
         }
 
-        // Initial state - Show start button
         if (controller.selectedImagePath.isEmpty &&
             controller.imageFacts.isEmpty) {
           return SafeArea(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      'The time is yours',
-                      style: GoogleFonts.poppins(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                      textAlign: TextAlign.center,
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE07A5F), // Coral
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: const [
+                        BoxShadow(
+                          offset: Offset(4, 4),
+                          color: Colors.black,
+                          blurRadius: 0,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Find interesting facts about any object',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        color: Colors.white70,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 32),
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF4ADE80),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: controller.showImageSourceDialog,
-                          borderRadius: BorderRadius.circular(20),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 16,
-                            ),
-                            child: Text(
-                              'Start Now',
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.poppins(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                    child: Column(
+                      children: [
+                        Text(
+                          'DISCOVER FACTS',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            shadows: const [
+                              Shadow(
+                                offset: Offset(3, 3),
                                 color: Colors.black,
+                                blurRadius: 0,
                               ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Learn fascinating facts about anything',
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 18,
+                            color: Colors.white.withOpacity(0.8),
+                            shadows: const [
+                              Shadow(
+                                offset: Offset(2, 2),
+                                color: Colors.black54,
+                                blurRadius: 0,
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  InkWell(
+                    onTap: controller.showImageSourceDialog,
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 24,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF81B29A), // Sage green
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(4, 4),
+                            color: Colors.black,
+                            blurRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.add_a_photo,
+                            color: Colors.white,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            'START EXPLORING',
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              shadows: const [
+                                Shadow(
+                                  offset: Offset(2, 2),
+                                  color: Colors.black,
+                                  blurRadius: 0,
+                                ),
+                              ],
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           );
         }
 
-        // Show facts in swipeable cards
-        if (controller.imageFacts.isNotEmpty) {
-          return Column(
-            children: [
-              // Selected image preview
-              if (controller.selectedImagePath.isNotEmpty)
-                Container(
-                  height: 200,
-                  margin: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Image.file(
-                      File(controller.selectedImagePath.value),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-
-              // Facts PageView with static dots
-              Expanded(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: PageView.builder(
-                        itemCount: controller.imageFacts.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 24.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                FactCard(fact: controller.imageFacts[index]),
-                              ],
-                            ),
-                          );
-                        },
-                        onPageChanged: (index) {
-                          // Update current page index if needed
-                        },
-                      ),
-                    ),
-                    // Static dots indicator
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 24.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          3, // Since we always have 3 facts
-                          (dotIndex) => Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xFF4ADE80),
-                            ),
-                          ),
-                        ),
-                      ),
+        return Column(
+          children: [
+            if (controller.selectedImagePath.isNotEmpty)
+              Container(
+                height: 200,
+                margin: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      offset: Offset(4, 4),
+                      color: Colors.black,
+                      blurRadius: 0,
                     ),
                   ],
                 ),
-              ),
-
-              // Another object button
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFFD93D), // Yellow
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: controller.showImageSourceDialog,
-                      borderRadius: BorderRadius.circular(20),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        child: Text(
-                          'Try Another Object',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.file(
+                    File(controller.selectedImagePath.value),
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ],
-          );
-        }
-
-        return const SizedBox.shrink();
+            Expanded(
+              child: PageView.builder(
+                itemCount: controller.imageFacts.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FactCard(fact: controller.imageFacts[index]),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: InkWell(
+                onTap: controller.showImageSourceDialog,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 20,
+                    horizontal: 24,
+                  ),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFE07A5F), // Coral
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: const [
+                      BoxShadow(
+                        offset: Offset(4, 4),
+                        color: Colors.black,
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    'TRY ANOTHER',
+                    style: GoogleFonts.spaceGrotesk(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
       }),
     );
   }

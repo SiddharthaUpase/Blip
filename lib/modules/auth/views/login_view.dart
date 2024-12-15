@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controllers/auth_controller.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F1DE), // Cream background
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -19,65 +21,129 @@ class LoginView extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              const Text(
-                'Welcome Back',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF3D405B), // Dark blue
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      offset: Offset(4, 4),
+                      color: Colors.black,
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
-                textAlign: TextAlign.center,
+                child: Text(
+                  'WELCOME BACK',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
               const SizedBox(height: 40),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.email_outlined),
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: const [
+                    BoxShadow(
+                      offset: Offset(4, 4),
+                      color: Colors.black,
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.lock_outline),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        labelText: 'EMAIL',
+                        labelStyle: GoogleFonts.spaceGrotesk(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: const Icon(Icons.email_outlined),
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'PASSWORD',
+                        labelStyle: GoogleFonts.spaceGrotesk(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        prefixIcon: const Icon(Icons.lock_outline),
+                      ),
+                      obscureText: true,
+                    ),
+                  ],
                 ),
-                obscureText: true,
               ),
               const SizedBox(height: 24),
-              Obx(() => ElevatedButton(
-                    onPressed: _authController.loading.value
+              Obx(() => InkWell(
+                    onTap: _authController.loading.value
                         ? null
                         : () => _authController.signIn(
                               email: _emailController.text,
                               password: _passwordController.text,
                             ),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: _authController.loading.value
-                        ? const CircularProgressIndicator()
-                        : const Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFE07A5F), // Coral
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: const [
+                          BoxShadow(
+                            offset: Offset(4, 4),
+                            color: Colors.black,
+                            blurRadius: 0,
                           ),
+                        ],
+                      ),
+                      child: _authController.loading.value
+                          ? Text(
+                              'LOADING...',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            )
+                          : Text(
+                              'LOGIN',
+                              style: GoogleFonts.spaceGrotesk(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                    ),
                   )),
-              const SizedBox(height: 16),
-              // OutlinedButton.icon(
-              //   onPressed: () => _authController.signInWithGoogle(),
-              //   icon: Image.network(
-              //     'https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg',
-              //     height: 24,
-              //   ),
-              //   label: const Text('Continue with Google'),
-              // ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 24),
               TextButton(
                 onPressed: () => Get.toNamed('/signup'),
-                child: const Text('Don\'t have an account? Sign Up'),
+                child: Text(
+                  'DON\'T HAVE AN ACCOUNT? SIGN UP',
+                  style: GoogleFonts.spaceGrotesk(
+                    fontWeight: FontWeight.bold,
+                    color: const Color(0xFF3D405B),
+                  ),
+                ),
               ),
               const Spacer(),
             ],

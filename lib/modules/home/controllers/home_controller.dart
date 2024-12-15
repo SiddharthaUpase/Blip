@@ -34,9 +34,29 @@ class HomeController extends GetxController {
   static String apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
 
   @override
+  void onInit() {
+    super.onInit();
+    // Reset all states when controller is initialized
+    selectedImagePath.value = '';
+    imageFacts.clear();
+    isAnalyzing.value = false;
+    loadingMessage.value = '';
+    _loadingTimer?.cancel();
+  }
+
+  @override
   void onClose() {
     _loadingTimer?.cancel();
     super.onClose();
+  }
+
+  //creaet a method to reset all states
+  void resetStates() {
+    selectedImagePath.value = '';
+    imageFacts.clear();
+    isAnalyzing.value = false;
+    loadingMessage.value = '';
+    _loadingTimer?.cancel();
   }
 
   void _startLoadingAnimation() {
