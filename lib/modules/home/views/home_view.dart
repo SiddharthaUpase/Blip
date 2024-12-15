@@ -342,33 +342,41 @@ class HomeView extends GetView<HomeController> {
         return Column(
           children: [
             if (controller.selectedImagePath.isNotEmpty)
-              Container(
-                height: 200,
-                margin: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: const [
-                    BoxShadow(
-                      offset: Offset(4, 4),
-                      color: Colors.black,
-                      blurRadius: 0,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.file(
-                    File(controller.selectedImagePath.value),
-                    fit: BoxFit.cover,
+              //a size box
+              const SizedBox(height: 20),
+            Container(
+              height: 200,
+              margin: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                boxShadow: const [
+                  BoxShadow(
+                    offset: Offset(4, 4),
+                    color: Colors.black,
+                    blurRadius: 0,
                   ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(
+                  File(controller.selectedImagePath.value),
+                  fit: BoxFit.cover,
                 ),
               ),
+            ),
+            //add a thinkhin emoji
+            const SizedBox(height: 20),
+            const Text(
+              '🤔',
+              style: TextStyle(fontSize: 24), // Increased font size
+            ),
             Expanded(
               child: PageView.builder(
                 itemCount: controller.imageFacts.length,
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

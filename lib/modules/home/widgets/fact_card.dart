@@ -15,7 +15,7 @@ class FactCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       decoration: BoxDecoration(
         color: cardColors[fact.hashCode %
             cardColors.length], // Rotate colors based on fact content
