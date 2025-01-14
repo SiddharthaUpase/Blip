@@ -15,17 +15,18 @@ class HomeController extends GetxController {
   final RxBool isAnalyzing = false.obs;
   final RxList<String> imageFacts = <String>[].obs;
   final RxString loadingMessage = ''.obs;
+  final RxList<String> fortunePredictions = <String>[].obs;
   final List<String> loadingMessages = [
-    "Cooking up facts... 🧪",
-    "Extracting knowledge... 🍜",
-    "Teaching AI your image... 🎨",
-    "Diving into the facts... 🌊",
-    "Brewing some facts... ☕️",
-    "Sprinkling wisdom... ✨",
-    "Fact-checking... 🌍",
-    "Converting pixels... 💭",
-    "Making facts juicy... 🍊",
-    "Stirring knowledge... 🥘"
+    "Reading your aura... 🔮",
+    "Consulting the stars... ⭐️",
+    "Aligning cosmic energies... 🌌",
+    "Decoding your destiny... 🎴",
+    "Channeling mystic forces... ✨",
+    "Peering into your future... 🔍",
+    "Interpreting celestial signs... 🌙",
+    "Unfolding your fate... 🎭",
+    "Connecting with spirits... 👻",
+    "Drawing from ancient wisdom... 📜"
   ];
 
   Timer? _loadingTimer;
@@ -95,8 +96,8 @@ class HomeController extends GetxController {
 
     try {
       isAnalyzing.value = true;
-      _startLoadingAnimation(); // Start the loading animation
-      imageFacts.clear();
+      _startLoadingAnimation();
+      fortunePredictions.clear();
 
       final bytes = await imageFile.readAsBytes();
       final base64Image = base64Encode(bytes);
@@ -116,7 +117,16 @@ class HomeController extends GetxController {
                 {
                   'type': 'text',
                   'text':
-                      'Identify the prominent object in the image and deliver 3 mind-blowing, fascinating, and little-known facts about it. Each fact should be scientifically accurate, surprising, and leave the user in awe—like an unbelievable yet true trivia gem. Return the response in strict JSON format: {"facts": ["Fact 1", "Fact 2", "Fact 3"]}. Avoid basic or obvious information—focus on rare, jaw-dropping insights that are sure to captivate. The facts should have metric units and quantities and dates. Do not exceed more than 30 words per fact. STRICTLY KEEP THE FACTS IN THE JSON FORMAT.STRICTLY KEEP THE WORD LIMIT TO MAXIMUM 30 WORDS PER FACT. You can also put more emphasis on getting historical facts and scientific facts.'
+                      '''Act as a mystical fortune teller and analyze this person's image. 
+                  Provide 3 intriguing predictions about their future in these areas:
+                  1. Career/Life Purpose
+                  2. Relationships/Love Life
+                  3. Personal Growth/Success
+                  
+                  Make the predictions mysterious, specific yet open to interpretation, and positive.
+                  Include mystical elements and timing (seasons, celestial events, etc.).
+                  Return in JSON format: {"predictions": ["prediction1", "prediction2", "prediction3"]}.
+                  Keep each prediction under 40 words.'''
                 },
                 {
                   'type': 'image_url',
@@ -125,35 +135,36 @@ class HomeController extends GetxController {
               ]
             }
           ],
-          'max_tokens': 300,
-          'temperature': 0.7
+          'max_tokens': 500,
+          'temperature': 0.8
         }),
       );
-
-      print('Response: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         String jsonString = data['choices'][0]['message']['content'];
+        print('Response: ${jsonString}');
 
-        // Remove the ```json prefix and ``` suffix if present
-        if (jsonString.startsWith('```json')) {
-          jsonString = jsonString.substring(7); // Remove ```json
-          jsonString = jsonString.substring(
-              0, jsonString.lastIndexOf('```')); // Remove trailing ```
+        // Clean up the JSON string by removing the markdown code block markers
+        jsonString =
+            jsonString.replaceAll('```json', '').replaceAll('```', '').trim();
+
+        try {
+          final jsonData = jsonDecode(jsonString);
+          final predictions = List<String>.from(jsonData['predictions']);
+          fortunePredictions.addAll(predictions);
+          print('Fortune Predictions: ${fortunePredictions}');
+        } catch (e) {
+          throw 'Failed to parse fortune predictions: $e';
         }
-
-        // Parse the cleaned JSON string
-        final jsonData = jsonDecode(jsonString.trim());
-        final facts = List<String>.from(jsonData['facts']);
-        imageFacts.addAll(facts);
       } else {
-        throw 'Failed to analyze image: ${response.statusCode}';
+        throw 'Failed to read fortune: ${response.statusCode}';
       }
     } catch (e) {
-      Get.snackbar('Error', 'Failed to analyze image: $e');
+      Get.snackbar(
+          'Mystical Error', 'The spirits are unclear at this moment: $e');
     } finally {
-      _stopLoadingAnimation(); // Stop the loading animation
+      _stopLoadingAnimation();
       isAnalyzing.value = false;
     }
   }
@@ -167,14 +178,15 @@ class HomeController extends GetxController {
         child: Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: const Color(0xFFF4F1DE), // Cream background
+            color: const Color(0xFF2C1810), // Dark mystical background
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.black, width: 2),
+            border: Border.all(
+                color: const Color(0xFFD4AF37), width: 2), // Gold border
             boxShadow: const [
               BoxShadow(
                 offset: Offset(6, 6),
-                color: Colors.black,
-                blurRadius: 0,
+                color: Color(0xFFD4AF37),
+                blurRadius: 8,
               ),
             ],
           ),
@@ -182,16 +194,15 @@ class HomeController extends GetxController {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'CAPTURE THE MAGIC! 📸',
-                style: GoogleFonts.spaceGrotesk(
+                'REVEAL YOUR DESTINY 🔮',
+                style: GoogleFonts.cinzelDecorative(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: const Color(0xFFD4AF37), // Gold text
                 ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 24),
-              // Camera Option (More Prominent)
               InkWell(
                 onTap: () {
                   Get.back();
@@ -203,14 +214,15 @@ class HomeController extends GetxController {
                     horizontal: 20,
                   ),
                   decoration: BoxDecoration(
-                    color: const Color(0xFFFF4F81), // Matching card color
+                    color: const Color(0xFF8B4513), // Mystic brown
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.black, width: 2),
+                    border:
+                        Border.all(color: const Color(0xFFD4AF37), width: 2),
                     boxShadow: const [
                       BoxShadow(
                         offset: Offset(4, 4),
-                        color: Colors.black,
-                        blurRadius: 0,
+                        color: Color(0xFFD4AF37),
+                        blurRadius: 4,
                       ),
                     ],
                   ),
@@ -219,16 +231,16 @@ class HomeController extends GetxController {
                     children: [
                       const Icon(
                         Icons.camera_alt,
-                        color: Colors.white,
+                        color: Color(0xFFD4AF37),
                         size: 28,
                       ),
                       const SizedBox(width: 12),
                       Text(
-                        'TAKE PHOTO',
-                        style: GoogleFonts.spaceGrotesk(
-                          fontSize: 18,
+                        'CAPTURE THE MAGIC! 📸',
+                        style: GoogleFonts.cinzelDecorative(
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: const Color(0xFFD4AF37),
                         ),
                       ),
                     ],
@@ -236,17 +248,16 @@ class HomeController extends GetxController {
                 ),
               ),
               const SizedBox(height: 16),
-              // Gallery Option (Less Prominent)
               TextButton(
                 onPressed: () {
                   Get.back();
                   pickImage(ImageSource.gallery);
                 },
                 child: Text(
-                  'or choose from gallery',
-                  style: GoogleFonts.spaceGrotesk(
-                    fontSize: 16,
-                    color: Colors.black54,
+                  'Choose from your past images',
+                  style: GoogleFonts.cinzelDecorative(
+                    fontSize: 14,
+                    color: const Color(0xFFD4AF37),
                     decoration: TextDecoration.underline,
                   ),
                 ),
