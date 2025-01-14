@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart' as prefs;
 
 class HomeController extends GetxController {
   final ImagePicker _picker = ImagePicker();
@@ -35,9 +36,16 @@ class HomeController extends GetxController {
   static const String openAiUrl = 'https://api.openai.com/v1/chat/completions';
   static String apiKey = dotenv.env['OPENAI_API_KEY'] ?? '';
 
+  final RxList<Map<String, dynamic>> savedFortunes =
+      <Map<String, dynamic>>[].obs;
+  late final prefs.SharedPreferences _prefs;
+
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
+    // Initialize SharedPreferences
+    _prefs = await prefs.SharedPreferences.getInstance();
+    _loadSavedFortunes();
     // Reset all states when controller is initialized
     selectedImagePath.value = '';
     imageFacts.clear();
@@ -267,5 +275,45 @@ class HomeController extends GetxController {
         ),
       ),
     );
+  }
+
+  void _loadSavedFortunes() {
+    final fortunesJson = _prefs.getStringList('saved_fortunes') ?? [];
+    savedFortunes.value = fortunesJson
+        .map((json) => Map<String, dynamic>.from(jsonDecode(json)))
+        .toList();
+  }
+
+  Future<void> saveFortune() async {
+    if (fortunePredictions.isEmpty) return;
+
+    final fortune = {
+      'date': DateTime.now().toIso8601String(),
+      'image': selectedImagePath.value,
+      'predictions': fortunePredictions.toList(),
+    };
+
+    savedFortunes.insert(0, fortune); // Add to beginning of list
+
+    // Save to SharedPreferences
+    final fortunesJson =
+        savedFortunes.map((fortune) => jsonEncode(fortune)).toList();
+    await _prefs.setStringList('saved_fortunes', fortunesJson);
+
+    Get.snackbar(
+      'Fortune Saved',
+      'Your mystical reading has been preserved ✨',
+      backgroundColor: const Color(0xFFD4AF37),
+      colorText: const Color(0xFF2C1810),
+    );
+  }
+
+  Future<void> deleteFortune(int index) async {
+    savedFortunes.removeAt(index);
+
+    // Update SharedPreferences
+    final fortunesJson =
+        savedFortunes.map((fortune) => jsonEncode(fortune)).toList();
+    await _prefs.setStringList('saved_fortunes', fortunesJson);
   }
 }

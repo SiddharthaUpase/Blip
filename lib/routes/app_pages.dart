@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../modules/auth/views/login_view.dart';
 import '../modules/auth/views/signup_view.dart';
 import '../modules/home/views/home_view.dart';
+import '../modules/home/views/saved_fortunes_view.dart';
 
 class AppPages {
   static final routes = [
@@ -17,6 +18,10 @@ class AppPages {
     GetPage(
       name: Routes.HOME,
       page: () => const HomeView(),
+    ),
+    GetPage(
+      name: Routes.SAVED_FORTUNES,
+      page: () => const SavedFortunesView(),
     ),
   ];
 }
