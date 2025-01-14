@@ -21,6 +21,10 @@ class SavedFortunesView extends GetView<HomeController> {
             color: const Color(0xFFD4AF37),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Color(0xFFD4AF37)),
+          onPressed: () => Get.back(),
+        ),
       ),
       body: Obx(
         () => controller.savedFortunes.isEmpty
