@@ -39,6 +39,7 @@ class HomeController extends GetxController {
   final RxList<Map<String, dynamic>> savedFortunes =
       <Map<String, dynamic>>[].obs;
   late final prefs.SharedPreferences _prefs;
+  final RxBool isCurrentFortuneSaved = false.obs;
 
   @override
   void onInit() async {
@@ -66,6 +67,7 @@ class HomeController extends GetxController {
     imageFacts.clear();
     isAnalyzing.value = false;
     loadingMessage.value = '';
+    isCurrentFortuneSaved.value = false;
     _loadingTimer?.cancel();
   }
 
@@ -106,6 +108,7 @@ class HomeController extends GetxController {
       isAnalyzing.value = true;
       _startLoadingAnimation();
       fortunePredictions.clear();
+      isCurrentFortuneSaved.value = false;
 
       final bytes = await imageFile.readAsBytes();
       final base64Image = base64Encode(bytes);
@@ -285,7 +288,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> saveFortune() async {
-    if (fortunePredictions.isEmpty) return;
+    if (fortunePredictions.isEmpty || isCurrentFortuneSaved.value) return;
 
     final fortune = {
       'date': DateTime.now().toIso8601String(),
@@ -293,12 +296,14 @@ class HomeController extends GetxController {
       'predictions': fortunePredictions.toList(),
     };
 
-    savedFortunes.insert(0, fortune); // Add to beginning of list
+    savedFortunes.insert(0, fortune);
 
     // Save to SharedPreferences
     final fortunesJson =
         savedFortunes.map((fortune) => jsonEncode(fortune)).toList();
     await _prefs.setStringList('saved_fortunes', fortunesJson);
+
+    isCurrentFortuneSaved.value = true;
 
     Get.snackbar(
       'Fortune Saved',

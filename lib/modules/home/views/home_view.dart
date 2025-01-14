@@ -26,9 +26,34 @@ class HomeView extends GetView<HomeController> {
         actions: [
           // Save button (only show when there are predictions)
           Obx(() => controller.fortunePredictions.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.save, color: Color(0xFFD4AF37)),
-                  onPressed: controller.saveFortune,
+              ? Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: ElevatedButton.icon(
+                    icon: const Icon(
+                      Icons.save,
+                      color: Color(0xFF2C1810),
+                    ),
+                    label: Text(
+                      controller.isCurrentFortuneSaved.value
+                          ? 'Saved ✨'
+                          : 'Save ',
+                      style: GoogleFonts.cinzelDecorative(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF2C1810),
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFD4AF37),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed: controller.isCurrentFortuneSaved.value
+                        ? null // Disable button if already saved
+                        : controller.saveFortune,
+                  ),
                 )
               : const SizedBox.shrink()),
           // Archive button
